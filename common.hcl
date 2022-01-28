@@ -24,6 +24,18 @@ terraform {
     execute      = ["rm", "./.terragrunt/common.hcl"]
     run_on_error = true
   }
+
+  after_hook "after_hook" {
+    commands     = ["apply", "plan", "import"]
+    execute      = ["rm", "./.terragrunt/getRancherAPIAdminToken.sh"]
+    run_on_error = true
+  }
+
+  after_hook "after_hook" {
+    commands     = ["apply", "plan", "import"]
+    execute      = ["rm", "./.terragrunt/getRancherAPIUrl.sh"]
+    run_on_error = true
+  }
 }
 
 inputs = {
