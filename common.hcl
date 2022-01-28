@@ -18,6 +18,12 @@ terraform {
     commands     = ["apply", "plan", "import"]
     execute      = ["bash", "-c", "export VAULT_ADDR=\"${lookup(jsondecode(file("../variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "vault_address")}\"; vault token lookup || vault login --method=github"]
   }
+
+  after_hook "after_hook" {
+    commands     = ["apply", "plan", "import"]
+    execute      = ["rm", "common.hcl"]
+    run_on_error = true
+  }
 }
 
 inputs = {
