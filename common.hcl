@@ -21,7 +21,7 @@ terraform {
 
   after_hook "after_hook" {
     commands     = ["apply", "plan", "import"]
-    execute      = ["rm", "common.hcl"]
+    execute      = ["rm", "./.terragrunt/common.hcl"]
     run_on_error = true
   }
 }
