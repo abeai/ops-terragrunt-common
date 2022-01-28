@@ -11,16 +11,16 @@ terraform {
 
   before_hook "before_hook" {
     commands     = ["apply", "plan", "import"]
-    execute      = ["aws-mfa", "--profile", lookup(lookup(jsondecode(file("${get_path_to_repo_root()}//variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "aws", {}), "profile")]
+    execute      = ["aws-mfa", "--profile", lookup(lookup(jsondecode(file("../variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "aws", {}), "profile")]
   }
 
   before_hook "before_hook" {
     commands     = ["apply", "plan", "import"]
-    execute      = ["bash", "-c", "export VAULT_ADDR=\"${lookup(jsondecode(file("${get_path_to_repo_root()}//variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "vault_address")}\"; vault token lookup || vault login --method=github"]
+    execute      = ["bash", "-c", "export VAULT_ADDR=\"${lookup(jsondecode(file("../variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "vault_address")}\"; vault token lookup || vault login --method=github"]
   }
 }
 
 inputs = {
-  RANCHER_API_URL = "${run_cmd("--terragrunt-quiet", "sh", "./.terragrunt/getRancherAPIUrl.sh", "${lookup(jsondecode(file("${get_path_to_repo_root()}//variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "vault_address")}")}"
-  RANCHER_TOKEN_KEY = "${run_cmd("--terragrunt-quiet", "sh", "./.terragrunt/getRancherAPIAdminToken.sh", "${lookup(jsondecode(file("${get_path_to_repo_root()}//variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "vault_address")}")}"
+  RANCHER_API_URL = "${run_cmd("--terragrunt-quiet", "sh", "./.terragrunt/getRancherAPIUrl.sh", "${lookup(jsondecode(file("../variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "vault_address")}")}"
+  RANCHER_TOKEN_KEY = "${run_cmd("--terragrunt-quiet", "sh", "./.terragrunt/getRancherAPIAdminToken.sh", "${lookup(jsondecode(file("../variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "vault_address")}")}"
 }
