@@ -18,6 +18,24 @@ terraform {
     commands     = ["apply", "plan", "import"]
     execute      = ["bash", "-c", "export VAULT_ADDR=\"${lookup(jsondecode(file("../variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "vault_address")}\"; vault token lookup || vault login --method=github"]
   }
+
+  after_hook "after_hook" {
+    commands     = ["apply", "plan", "import"]
+    execute      = ["rm", "./.terragrunt/common.hcl"]
+    run_on_error = true
+  }
+
+  after_hook "after_hook" {
+    commands     = ["apply", "plan", "import"]
+    execute      = ["rm", "./.terragrunt/getRancherAPIAdminToken.sh"]
+    run_on_error = true
+  }
+
+  after_hook "after_hook" {
+    commands     = ["apply", "plan", "import"]
+    execute      = ["rm", "./.terragrunt/getRancherAPIUrl.sh"]
+    run_on_error = true
+  }
 }
 
 inputs = {
