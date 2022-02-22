@@ -16,7 +16,7 @@ terraform {
 
   before_hook "before_hook" {
     commands     = ["apply", "plan", "import"]
-    execute      = ["bash", "-c", "export VAULT_ADDR=\"${lookup(jsondecode(file("../variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "vault_address")}\"; vault token lookup || (vault login --method=github && exit 1)"]
+    execute      = ["bash", "-c", "export VAULT_ADDR=\"${lookup(jsondecode(file("../variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "vault_address")}\"; vault token lookup || (vault login --method=github && echo \"EXITING.... YOU MUST RE-RUN THE COMMAND\" && exit 1)"]
   }
 
   after_hook "after_hook" {
