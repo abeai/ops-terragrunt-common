@@ -6,7 +6,7 @@ terraform {
 
   before_hook "before_hook" {
     commands     = ["apply", "plan", "import"]
-    execute      = ["bash", "-c", "[ -z \"$PS1\" ] && echo \"\" || read -p \"Press enter to continue...\""]
+    execute      = get_env("DEVOPS_TOOLKIT", "false") == "true" ? ["read", "-p \"Press enter to continue...\""] : []
   }
 
   before_hook "before_hook" {
