@@ -11,12 +11,12 @@ terraform {
 
   before_hook "before_hook" {
     commands     = ["apply", "plan", "import"]
-    execute      = split("/", get_parent_terragrunt_dir())[length(split("/", get_parent_terragrunt_dir())) - 1] == "ops-tf-gitlab" ? (get_env("GITLAB_TOKEN", "false") == "false" ? ["echo", "GITLAB_TOKEN env var required! Exiting..."] : ["echo", "GITLAB_TOKEN found!"]) : ["echo", ""]
+    execute      = split("/", get_parent_terragrunt_dir())[length(split("/", get_parent_terragrunt_dir())) - 2] == "ops-tf-gitlab" ? (get_env("GITLAB_TOKEN", "false") == "false" ? ["echo", "GITLAB_TOKEN env var required! Exiting..."] : ["echo", "GITLAB_TOKEN found!"]) : ["echo", ""]
   }
 
   before_hook "before_hook" {
     commands     = ["apply", "plan", "import"]
-    execute      = split("/", get_parent_terragrunt_dir())[length(split("/", get_parent_terragrunt_dir())) - 1] == "ops-tf-gitlab" ? (get_env("GITLAB_TOKEN", "false") == "false" ? ["exit", "1"] : ["echo", ""]) : ["echo", ""]
+    execute      = split("/", get_parent_terragrunt_dir())[length(split("/", get_parent_terragrunt_dir())) - 2] == "ops-tf-gitlab" ? (get_env("GITLAB_TOKEN", "false") == "false" ? ["exit", "1"] : ["echo", ""]) : ["echo", ""]
   }
 
   before_hook "before_hook" {
