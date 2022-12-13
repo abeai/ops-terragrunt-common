@@ -11,6 +11,16 @@ terraform {
 
   before_hook "before_hook" {
     commands     = ["apply", "plan", "import"]
+    execute      = get_parent_terragrunt_dir() == "ops-tf-gitlab" ? (get_env("GITLAB_TOKEN", "false") == "false" ? ["echo", "GITLAB_TOKEN env var required! Exiting..."] : ["echo", "GITLAB_TOKEN found!"]) : ["echo", ""]
+  }
+
+  before_hook "before_hook" {
+    commands     = ["apply", "plan", "import"]
+    execute      = get_parent_terragrunt_dir() == "ops-tf-gitlab" ? (get_env("GITLAB_TOKEN", "false") == "false" ? ["exit", "1"] : ["echo", ""]) : ["echo", ""]
+  }
+
+  before_hook "before_hook" {
+    commands     = ["apply", "plan", "import"]
     execute      = ["aws-mfa", "--profile", lookup(lookup(jsondecode(file("../variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "aws", jsondecode(file("../variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json"))), "profile")]
   }
 
