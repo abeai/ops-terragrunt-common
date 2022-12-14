@@ -29,6 +29,11 @@ terraform {
     execute      = ["bash", "-c", "export VAULT_ADDR=\"${lookup(jsondecode(file("../variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "vault_address")}\"; vault token lookup || { vault login --method=github; echo \"EXITING.... YOU MUST RE-RUN THE COMMAND\"; exit 1; }"]
   }
 
+  before_hook "before_hook" {
+    commands     = ["apply", "plan", "import"]
+    execute      = split("/", get_parent_terragrunt_dir())[length(split("/", get_parent_terragrunt_dir())) - 2] == "ops-tf-gitlab" ? ["sh", "./.terragrunt/getKubeConfig.sh", "${lookup(jsondecode(file("../variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "vault_address")}", "${lookup(jsondecode(file("../variables/${run_cmd("--terragrunt-quiet", "terraform", "workspace", "show")}.json")), "kubernetes_cluster")}"] : ["echo", ""]
+  }
+
   after_hook "after_hook" {
     commands     = ["apply", "plan", "import"]
     execute      = ["rm", "./.terragrunt/common.hcl"]
@@ -44,6 +49,12 @@ terraform {
   after_hook "after_hook" {
     commands     = ["apply", "plan", "import"]
     execute      = ["rm", "./.terragrunt/getRancherAPIUrl.sh"]
+    run_on_error = true
+  }
+
+  after_hook "after_hook" {
+    commands     = ["apply", "plan", "import"]
+    execute      = ["rm", "./.terragrunt/getKubeConfig.sh"]
     run_on_error = true
   }
 }
